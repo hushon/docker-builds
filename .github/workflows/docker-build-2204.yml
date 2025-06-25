@@ -3,6 +3,10 @@ name: Build and Push Docker Image
 on:
   workflow_dispatch:
 
+env:
+  UBUNTU_VERSION: 22.04
+  MINIFORGE_VERSION: 25.3.0-3
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,21 +24,15 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: hushon/miniforge3
-        tags:
-          type=raw,value=latest
-          
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: hushon/miniforge3:${{ env.UBUNTU_VERSION }}_${{ env.MINIFORGE_VERSION }}
+        build-args: |
+          UBUNTU_VERSION=${{ env.UBUNTU_VERSION }}
+          MINIFORGE_VERSION=${{ env.MINIFORGE_VERSION }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

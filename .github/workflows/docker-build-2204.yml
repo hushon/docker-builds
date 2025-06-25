@@ -1,10 +1,10 @@
-name: Build and Push Docker Image
+name: Build and Push ubuntu 22.04
 
 on:
   workflow_dispatch:
 
 env:
-  UBUNTU_VERSION: noble-20250529
+  UBUNTU_VERSION: 22.04
   MINIFORGE_VERSION: 25.3.0-3
 
 jobs:

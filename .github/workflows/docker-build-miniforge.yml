@@ -1,0 +1,41 @@
+name: Build and Push Miniforge3
+
+on:
+  workflow_dispatch:
+
+env:
+  MINIFORGE_VERSION: 25.3.0-3
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        UBUNTU_VERSION: [20.04, 22.04, 24.04]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: hushon/miniforge3:${{ matrix.UBUNTU_VERSION }}
+          build-args: |
+            UBUNTU_VERSION=${{ matrix.UBUNTU_VERSION }}
+            MINIFORGE_NAME=Miniforge3
+            MINIFORGE_VERSION=${{ env.MINIFORGE_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

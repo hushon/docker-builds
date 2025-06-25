@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  UBUNTU_VERSION: 24.04
+  UBUNTU_VERSION: noble-20250529
   MINIFORGE_VERSION: 25.3.0-3
 
 jobs:

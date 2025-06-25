@@ -33,6 +33,7 @@ jobs:
         tags: hushon/miniforge3:${{ env.UBUNTU_VERSION }}_${{ env.MINIFORGE_VERSION }}
         build-args: |
           UBUNTU_VERSION=${{ env.UBUNTU_VERSION }}
+          MINIFORGE_NAME=Miniforge3
           MINIFORGE_VERSION=${{ env.MINIFORGE_VERSION }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

@@ -9,8 +9,6 @@ ENV CONDA_DIR=/opt/conda
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-RUN echo "Download URL: https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh"
-
 # 1. Install just enough for conda to work
 # 2. Keep $HOME clean (no .wget-hsts file), since HSTS isn't useful in this context
 # 3. Install miniforge from GitHub releases
@@ -30,7 +28,7 @@ RUN apt-get update > /dev/null && \
         > /dev/null && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    wget --no-hsts https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
+    wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
     /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
     rm /tmp/miniforge.sh && \
     conda clean --tarballs --index-cache --packages --yes && \
@@ -42,3 +40,27 @@ RUN apt-get update > /dev/null && \
 
 ENTRYPOINT ["tini", "--"]
 CMD [ "/bin/bash" ]
+
+
+# install additional applications
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
+                sudo \
+                git \
+                wget \
+                curl \
+                zip \
+                unzip \
+                vim \
+                zsh \
+                htop \
+                tmux \
+                build-essential \
+                openssh-client
+
+# install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+RUN pip install gpustat
+
+RUN apt-get clean

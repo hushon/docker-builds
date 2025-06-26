@@ -1,5 +1,5 @@
 ARG JAX_TAG
-FROM nvcr.io/nvidia/jax:${JAX_TAG}
+FROM nvcr.io/nvidia/jax:24.10-py3
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \

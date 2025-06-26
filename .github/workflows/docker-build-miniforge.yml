@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./miniforge3/Dockerfile
           push: true
           tags: hushon/miniforge3:${{ matrix.UBUNTU_VERSION }}
           build-args: |

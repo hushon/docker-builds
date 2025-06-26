@@ -1,0 +1,36 @@
+name: Build and Push jax
+
+on:
+  workflow_dispatch:
+
+env:
+  JAX_TAG: 24.10-py3
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./jax/Dockerfile
+        push: true
+        tags: hushon/jax:${{ env.JAX_TAG }}
+        build-args: |
+          PYTORCH_TAG=${{ env.JAX_TAG }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

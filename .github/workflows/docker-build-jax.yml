@@ -31,6 +31,6 @@ jobs:
         push: true
         tags: hushon/jax:${{ env.JAX_TAG }}
         build-args: |
-          PYTORCH_TAG=${{ env.JAX_TAG }}
+          JAX_TAG=${{ env.JAX_TAG }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

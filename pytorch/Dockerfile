@@ -18,7 +18,8 @@ RUN apt-get install -y --no-install-recommends \
 
 #RUN pip install --upgrade pip
 
-RUN pip install uv
+# install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 RUN pip install jupyter \
                 pandas \

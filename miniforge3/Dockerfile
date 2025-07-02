@@ -20,13 +20,19 @@ ENV PATH=${CONDA_DIR}/bin:${PATH}
 #    for their interactive shells.
 # 6. Activate base by default when running as root as well
 #    The root user is already created, so won't pick up changes to /etc/skel
-RUN apt-get update > /dev/null && \
-    apt-get install --no-install-recommends --yes \
-        wget bzip2 ca-certificates \
-        git \
-        tini \
-        > /dev/null && \
-    apt-get clean && \
+RUN apt-get install -y --no-install-recommends \
+        wget bzip2 ca-certificates git tini \
+                sudo \
+                curl \
+                zip \
+                unzip \
+                vim \
+                zsh \
+                htop \
+                tmux \
+                build-essential \
+                openssh-client
+RUN    apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     wget --no-hsts --quiet https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/${MINIFORGE_NAME}-${MINIFORGE_VERSION}-Linux-$(uname -m).sh -O /tmp/miniforge.sh && \
     /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR} && \
@@ -40,23 +46,6 @@ RUN apt-get update > /dev/null && \
 
 ENTRYPOINT ["tini", "--"]
 CMD [ "/bin/bash" ]
-
-
-# install additional applications
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-                sudo \
-                git \
-                wget \
-                curl \
-                zip \
-                unzip \
-                vim \
-                zsh \
-                htop \
-                tmux \
-                build-essential \
-                openssh-client
 
 # install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh

@@ -1,4 +1,4 @@
-name: Build and Push pytorch
+name: Build and Push miniconda3
 
 on:
   workflow_dispatch:

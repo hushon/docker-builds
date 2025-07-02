@@ -1,8 +1,6 @@
 ARG UBUNTU_VERSION=24.04
 FROM ubuntu:${UBUNTU_VERSION}
 
-ARG MINIFORGE_NAME=Miniforge3
-ARG MINIFORGE_VERSION=25.3.0-3
 ARG TARGETPLATFORM
 
 ENV CONDA_DIR=/opt/conda
@@ -20,33 +18,9 @@ ENV PATH=${CONDA_DIR}/bin:${PATH}
 #    for their interactive shells.
 # 6. Activate base by default when running as root as well
 #    The root user is already created, so won't pick up changes to /etc/skel
-RUN apt-get update
-RUN apt-get install --no-install-recommends --yes \
-        wget bzip2 ca-certificates \
-        git \
-        tini
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
-RUN wget --no-hsts https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniforge.sh
-RUN /bin/bash /tmp/miniforge.sh -b -p ${CONDA_DIR}
-RUN rm /tmp/miniforge.sh
-RUN conda clean --tarballs --index-cache --packages --yes && \
-    find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
-    find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \
-    conda clean --force-pkgs-dirs --all --yes  && \
-    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> /etc/skel/.bashrc && \
-    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> ~/.bashrc
-
-ENTRYPOINT ["tini", "--"]
-CMD [ "/bin/bash" ]
-
-
-# install additional applications
-RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
+        wget bzip2 ca-certificates git tini \
                 sudo \
-                git \
-                wget \
                 curl \
                 zip \
                 unzip \
@@ -56,6 +30,20 @@ RUN apt-get install -y --no-install-recommends \
                 tmux \
                 build-essential \
                 openssh-client
+RUN    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget --no-hsts --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p ${CONDA_DIR} && \
+    rm /tmp/miniconda.sh && \
+    conda clean --tarballs --index-cache --packages --yes && \
+    find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
+    find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \
+    conda clean --force-pkgs-dirs --all --yes  && \
+    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> /etc/skel/.bashrc && \
+    echo ". ${CONDA_DIR}/etc/profile.d/conda.sh && conda activate base" >> ~/.bashrc
+
+ENTRYPOINT ["tini", "--"]
+CMD [ "/bin/bash" ]
 
 # install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh

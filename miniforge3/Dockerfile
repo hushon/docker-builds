@@ -20,6 +20,7 @@ ENV PATH=${CONDA_DIR}/bin:${PATH}
 #    for their interactive shells.
 # 6. Activate base by default when running as root as well
 #    The root user is already created, so won't pick up changes to /etc/skel
+RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
         wget bzip2 ca-certificates git tini \
                 sudo \

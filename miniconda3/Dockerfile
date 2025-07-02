@@ -31,9 +31,7 @@ RUN apt-get install -y --no-install-recommends \
                 tmux \
                 build-essential \
                 openssh-client
-RUN    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    wget --no-hsts --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+RUN wget --no-hsts --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     /bin/bash /tmp/miniconda.sh -b -p ${CONDA_DIR} && \
     rm /tmp/miniconda.sh && \
     conda clean --tarballs --index-cache --packages --yes && \

@@ -46,5 +46,6 @@ CMD [ "/bin/bash" ]
 
 # install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin/:$PATH"
 
 RUN apt-get clean

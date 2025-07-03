@@ -47,6 +47,4 @@ CMD [ "/bin/bash" ]
 # install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-RUN pip install gpustat
-
 RUN apt-get clean

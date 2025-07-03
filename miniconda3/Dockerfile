@@ -31,9 +31,9 @@ RUN apt-get install -y --no-install-recommends \
                 tmux \
                 build-essential \
                 openssh-client
-RUN wget --no-hsts --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
-    /bin/bash /tmp/miniconda.sh -b -p ${CONDA_DIR} && \
-    rm /tmp/miniconda.sh && \
+RUN wget --no-hsts https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+RUN /bin/bash /tmp/miniconda.sh -b -p ${CONDA_DIR}
+RUN rm /tmp/miniconda.sh && \
     conda clean --tarballs --index-cache --packages --yes && \
     find ${CONDA_DIR} -follow -type f -name '*.a' -delete && \
     find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete && \

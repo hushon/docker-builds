@@ -49,6 +49,6 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin/:$PATH"
 
 # install gdu (disk usage analyzer)
-RUN add-apt-repository ppa:daniel-milde/gdu && apt-get install -y gdu
+RUN apt-get install -y ncdu
 
 RUN apt-get clean
